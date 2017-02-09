@@ -94,7 +94,7 @@ module HTTP
 
     # Verify our request isn't going to be made against another URI
     def verify_connection!(uri)
-      if default_options.persistent? && uri.origin != default_options.persistent
+      if default_options.persistent? && uri.origin != default_options.persistent.origin
         raise StateError, "Persistence is enabled for #{default_options.persistent}, but we got #{uri.origin}"
       # We re-create the connection object because we want to let prior requests
       # lazily load the body as long as possible, and this mimics prior functionality.
@@ -115,7 +115,8 @@ module HTTP
       uri = uri.to_s
 
       if default_options.persistent? && uri !~ HTTP_OR_HTTPS_RE
-        uri = "#{default_options.persistent}#{uri}"
+        use = default_options.persistent
+        uri = "#{[use.origin, use.path].join}#{uri}"
       end
 
       uri = HTTP::URI.parse uri

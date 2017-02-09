@@ -133,7 +133,7 @@ module HTTP
     end
 
     def persistent=(value)
-      @persistent = value ? HTTP::URI.parse(value).origin : nil
+      @persistent = value ? HTTP::URI.parse(value) : nil
     end
 
     def persistent?
