@@ -69,6 +69,11 @@ module HTTP
       end
 
       def send_request
+        $HTTP_DEBUG and (wide = @request_header[1..-1].map {|item| item.index ':'}.max + 1) and puts \
+          "", "==[ Request: #{Time.now.strftime("%Y-%m-%d %H:%M:%S.%3N")} ]".ljust(80, "="),
+          "", @request_header[0],
+          "", @request_header[1..-1].map {|item| item.sub(/(?<=:)/) { " " * (wide - $`.size) }}
+
         headers = join_headers
 
         # It's important to send the request in a single write call when

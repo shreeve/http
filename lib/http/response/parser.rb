@@ -49,6 +49,12 @@ module HTTP
       end
 
       def on_message_complete
+        $HTTP_DEBUG and (wide = headers.keys.map(&:size).max+1) and puts \
+          "", "==[ Response: #{Time.now.strftime("%Y-%m-%d %H:%M:%S.%3N")} ]".ljust(80, "="),
+          "", "HTTP/#{http_version} #{status_code}",
+          "", headers.map {|k,v| "#{(k+':').ljust(wide)} #{v}"},
+          "", @chunk
+
         @finished = true
       end
 
